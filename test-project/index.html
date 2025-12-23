@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas Zoom</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bungee&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        background-color: #112;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 30px;
+        background-color: #000000;
+        background-image: radial-gradient(#ffffff33 1px, #00091d 1px);
+        background-size: 20px 20px;
+        height: 100vh;
+      }
+      canvas {
+        border-radius: 5px;
+        animation: animate 2s linear infinite alternate;
+      }
+      .container {
+        width: 200px;
+        height: 300px;
+        border-radius: 5px;
+      }
+      .btns {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        width: 200px;
+        height: 40px;
+      }
+      h2 {
+        color: azure;
+        font-family: "Bungee", serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+      .btns * {
+        background-color: rgb(46, 91, 216);
+        width: 30px;
+        aspect-ratio: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: azure;
+        font-size: 20px;
+        border-radius: 4px;
+        font-family: "Bungee", serif;
+        font-weight: 400;
+        font-style: normal;
+        cursor: pointer;
+        transition: 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) all;
+      }
+      .btns *:hover {
+        transform: scale(1.1) rotate(10deg);
+      }
+      @keyframes animate {
+        0% {
+          transform: scale(1.1) translateY(10px);
+        }
+        100% {
+          transform: scale(1.1) translateY(0px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Zoom In And Out</h2>
+    <div class="container">
+      <canvas></canvas>
+    </div>
+    <div class="btns">
+      <div class="btn inc">+</div>
+      <div class="btn dec">-</div>
+    </div>
+    <script type="module">
+      import { transformImgToCells } from "./img-script.js";
+      const canvas = document.querySelector("canvas");
+      const inc = document.querySelector(".inc");
+      const dec = document.querySelector(".dec");
+      const ctx = canvas.getContext("2d");
+      const width = (canvas.width = 200);
+      const height = (canvas.height = 300);
+      let scale = 1;
+      let zoomFactor = 0.1;
+      const img = new Image();
+      img.src = "../src/assets/picture.webp";
+      const drawImage = () => {
+        ctx.clearRect(0, 0, width, height);
+        const x = width / 2 - (width * scale) / 2;
+        const y = height / 2 - (height * scale) / 2;
+        ctx.save();
+        ctx.translate(width / 2, height / 2);
+        ctx.scale(scale, scale);
+        ctx.translate(-width / 2 - x, -height / 2 - y);
+        ctx.drawImage(img, x, y, width, height);
+        ctx.restore();
+      };
+      inc.addEventListener("click", () => {
+        scale += zoomFactor;
+        drawImage();
+      });
+      dec.addEventListener("click", () => {
+        scale -= zoomFactor;
+        drawImage();
+      });
+      img.onload = () => {
+        drawImage();
+      };
+      const effect = new transformImgToCells(img, canvas);
+      console.log(effect.Cells);
+      effect.animate();
+    </script>
+  </body>
+</html>

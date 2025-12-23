@@ -1,0 +1,12 @@
+.alert{
+    position: absolute;
+    right:50px ;
+    bottom: 15%;
+    background-color: tomato;
+    height: 100px;
+    width: 300px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
